@@ -1,0 +1,37 @@
+name: Test
+on: workflow_dispatch
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: given
+        run: date > foo.txt
+      - name: when
+        id: when
+        uses: ./
+        with:
+          message: Test
+      - name: then
+        env:
+          BRANCH: ${{ steps.when.outputs.branch }}
+        run: |
+          set -x
+          test "$(gh pr view "${BRANCH}" --json title --jq .title)" = "Test"
+      - name: teardown
+        if: ${{ always() }}
+        env:
+          BRANCH: ${{ steps.when.outputs.branch }}
+        run: |
+          gt pr close "${BRANCH}" || true
+          git push origin "${BRANCH}" --delete || true
