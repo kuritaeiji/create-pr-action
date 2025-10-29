@@ -33,5 +33,5 @@ jobs:
         env:
           BRANCH: ${{ steps.when.outputs.branch }}
         run: |
-          gt pr close "${BRANCH}" || true
+          gh pr close "${BRANCH}" || true
           git push origin "${BRANCH}" --delete || true
