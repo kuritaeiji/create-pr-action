@@ -1,4 +1,4 @@
-#!/user/bin/env bash
+#!/usr/bin/env bash
 
 git fetch --tag 2> /dev/null
 version="$(git tag --sort=v:refname | tail -1 | sed 's/^v//')"
