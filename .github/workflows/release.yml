@@ -1,0 +1,32 @@
+name: Release Action
+run-name: ${{ inputs.bump-version }}
+on:
+  workflow_dispatch:
+    inputs:
+      bump-version:
+        type: choice
+        options: [patch, minor, major]
+        required: true
+        description: Bump to patch or minor or major
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    env:
+      USERNAME: github-actions[bot]
+      EMAIL: github-actions[bot]@users.noreply.github.com
+      BUMP_LEVEL: ${{ inputs.bump-version }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+    steps:
+      - name: create version tag and release not
+        run: |
+          git config --global user.name "${USERNAME}"
+          git config --global user.email "${EMAIL}"
+          version=$(./github/scripts/release.sh "${BUMP_LEVEL}")
+          gh release create "${VERSION}" --title "${VERSION}" --generate-notes
