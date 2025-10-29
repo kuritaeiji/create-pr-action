@@ -1,9 +1,9 @@
 name: Release Action
-run-name: ${{ inputs.bump-version }}
+run-name: ${{ inputs.bump-level }}
 on:
   workflow_dispatch:
     inputs:
-      bump-version:
+      bump-level:
         type: choice
         options: [patch, minor, major]
         required: true
@@ -19,7 +19,7 @@ jobs:
     env:
       USERNAME: github-actions[bot]
       EMAIL: github-actions[bot]@users.noreply.github.com
-      BUMP_LEVEL: ${{ inputs.bump-version }}
+      BUMP_LEVEL: ${{ inputs.bump-level }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: write
