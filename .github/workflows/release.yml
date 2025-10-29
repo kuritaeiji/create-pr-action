@@ -24,9 +24,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - run: |
-          ls .github
-          ls .github/scripts
+      - uses: actions/checkout@v5
       - name: create version tag and release not
         run: |
           git config --global user.name "${USERNAME}"
